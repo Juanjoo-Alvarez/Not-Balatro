@@ -44,14 +44,20 @@ export function getCardSpriteStyle(
   const x = col * CARD_WIDTH;
   const y = row * CARD_HEIGHT;
 
+  const scale = 1.45;
+
   return {
-    width: `${CARD_WIDTH}px`,
-    height: `${CARD_HEIGHT}px`,
+    width: `${CARD_WIDTH * scale}px`,
+    height: `${CARD_HEIGHT * scale}px`,
 
     backgroundImage: `url(${spriteUrl})`,
     backgroundRepeat: "no-repeat",
 
-    backgroundPosition: `-${x}px -${y}px`,
+    backgroundPosition: `-${x * scale}px -${y * scale}px`,
+
+    backgroundSize: `${13 * CARD_WIDTH * scale}px ${
+      4 * CARD_HEIGHT * scale
+    }px`,
 
     imageRendering: "pixelated",
 

@@ -31,8 +31,8 @@ const S = {
 
   // ── Sidebar ──
   sidebar: {
-    width: 170,
-    minWidth: 170,
+    width: 240,
+    minWidth: 240,
     background: "#1a2340",
     borderRight: "3px solid #0d1829",
     display: "flex",
@@ -340,10 +340,11 @@ const S = {
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    paddingBottom: 40
   },
   cardsContainer: {
     display: "flex",
-    gap: 10,
+    gap: 18,
     alignItems: "flex-end",
     justifyContent: "center",
     flexWrap: "wrap",
@@ -400,8 +401,8 @@ const S = {
     position: "absolute",
     right: 0,
     bottom: 0,
-    width: 58,
-    height: 84,
+    width: 78,
+    height: 112,
     background: "#1a3a8f",
     borderRadius: 8,
     border: "2px solid #2a5ad4",

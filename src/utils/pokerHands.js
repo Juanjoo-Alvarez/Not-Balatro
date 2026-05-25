@@ -49,10 +49,31 @@ export function evaluateHand(selectedCards) {
     }
   }
 
-  // FOUR OF A KIND
+  // Royal Flush
+  if (
+    isStraight &&
+    isFlush &&
+    sortedValues[4] === 14
+  ) {
+    return {
+      handName: "Royal Flush",
+      score: 500,
+    };
+  }
+
+
+  // Straight flush 
+  if (isStraight && isFlush) {
+    return {
+      handName: "Straight Flush",
+      score: 450,
+    };
+  }
+
+  // Poker
   if (repetitions.includes(4)) {
     return {
-      handName: "Four of a Kind",
+      handName: "Poker",
       score: 400,
     };
   }

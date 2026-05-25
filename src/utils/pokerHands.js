@@ -1,8 +1,8 @@
 const cardValues = {
-  A: 14,
-  K: 13,
-  Q: 12,
-  J: 11,
+  A: 11,
+  K: 10,
+  Q: 10,
+  J: 10,
 };
 
 function getNumericValue(value) {

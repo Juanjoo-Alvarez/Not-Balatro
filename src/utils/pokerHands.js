@@ -15,6 +15,19 @@ function getNumericValue(value) {
 }
 
 
+// Solo para puntaje de High Card
+const scoreValues = {
+  A: 11,
+  K: 10,
+  Q: 10,
+  J: 10,
+};
+
+function getScoreValue(value) {
+  return scoreValues[value] ?? Number(value);
+}
+
+
 // Praa stright con A como 1 o 14
 function checkStraight(values) {
   const sorted =
@@ -196,10 +209,8 @@ export function evaluateHand(
   }
 
   // Carta alta
-  return {
-    handName:
-      "High Card",
-    score:
-      Math.max(...values),
-  };
+return {
+  handName: "High Card",
+  score: Math.max(...selectedCards.map(c => getScoreValue(c.value))),
+};
 }

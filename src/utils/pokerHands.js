@@ -1,131 +1,193 @@
+// Funciones para evaluar la mano de poker y asignar puntajes
+
 const cardValues = {
-  A: 11,
-  K: 10,
-  Q: 10,
-  J: 10,
+  A: 14,
+  K: 13,
+  Q: 12,
+  J: 11,
 };
 
 function getNumericValue(value) {
-  return cardValues[value] || Number(value);
+  return (
+    cardValues[value] ||
+    Number(value)
+  );
 }
 
-export function evaluateHand(selectedCards) {
-  if (selectedCards.length === 0) {
+
+// Praa stright con A como 1 o 14
+function checkStraight(values) {
+  const sorted =
+    [...new Set(values)]
+      .sort((a, b) => a - b);
+
+  if (sorted.length !== 5)
+    return false;
+
+  const normal =
+    sorted.every(
+      (value, index) =>
+        index === 0 ||
+        value ===
+          sorted[index - 1] + 1
+    );
+
+  const aceLow =
+    JSON.stringify(sorted) ===
+    JSON.stringify([2,3,4,5,14]);
+
+  return normal || aceLow;
+}
+
+
+// Evalúa la mano seleccionada y devuelve el nombre y puntaje
+export function evaluateHand(
+  selectedCards
+) {
+  if (
+    selectedCards.length === 0
+  ) {
     return {
       handName: "No hand",
       score: 0,
     };
   }
 
-  const values = selectedCards.map((card) =>
-    getNumericValue(card.value)
-  );
+  const values =
+    selectedCards.map((card) =>
+      getNumericValue(
+        card.value
+      )
+    );
 
-  const suits = selectedCards.map((card) => card.suit);
+  const suits =
+    selectedCards.map(
+      (card) => card.suit
+    );
 
   const counts = {};
 
   values.forEach((value) => {
-    counts[value] = (counts[value] || 0) + 1;
+    counts[value] =
+      (counts[value] || 0) + 1;
   });
 
-  const repetitions = Object.values(counts);
+  const repetitions =
+    Object.values(counts);
 
-  const isFlush = suits.every(
-    (suit) => suit === suits[0]
-  );
+// Pairs = 2 cartas del mismo valor, Three of a Kind = 3, etc.
+  const pairs =
+    repetitions.filter(
+      (v) => v === 2
+    ).length;
 
-  const sortedValues = [...values].sort((a, b) => a - b);
+// Flush = todas del mismo palo
+  const isFlush =
+    selectedCards.length === 5 &&
+    suits.every(
+      (suit) =>
+        suit === suits[0]
+    );
 
-  let isStraight = true;
+// Straight = valores consecutivos
+  const isStraight =
+    checkStraight(values);
 
-  for (let i = 1; i < sortedValues.length; i++) {
-    if (
-      sortedValues[i] !==
-      sortedValues[i - 1] + 1
-    ) {
-      isStraight = false;
-      break;
-    }
-  }
+
+ // Royal Flush = 10, J, Q, K, A del mismo palo   
+  const isRoyal =
+    [10,11,12,13,14]
+      .every((v) =>
+        values.includes(v)
+      );
+
+   
+  // Para los puntaajes
 
   // Royal Flush
   if (
     isStraight &&
     isFlush &&
-    sortedValues[4] === 14
+    isRoyal
   ) {
     return {
-      handName: "Royal Flush",
+      handName:
+        "Royal Flush",
       score: 500,
     };
   }
 
-
-  // Straight flush 
-  if (isStraight && isFlush) {
+  // Straight Flush
+  if (
+    isStraight &&
+    isFlush
+  ) {
     return {
-      handName: "Straight Flush",
+      handName:
+        "Straight Flush",
       score: 450,
     };
   }
 
-  // Poker
-  if (repetitions.includes(4)) {
+  // Poker = 4 cartas del mismo valor
+  if (
+    repetitions.includes(4)
+  ) {
     return {
       handName: "Poker",
       score: 400,
     };
   }
 
-  // FULL HOUSE
+  //Full House
   if (
     repetitions.includes(3) &&
     repetitions.includes(2)
   ) {
     return {
-      handName: "Full House",
+      handName:
+        "Full House",
       score: 350,
     };
   }
 
-  // FLUSH
-  if (isFlush && selectedCards.length >= 5) {
+  // Flush
+  if (isFlush) {
     return {
       handName: "Flush",
       score: 300,
     };
   }
 
-  // STRAIGHT
-  if (isStraight && selectedCards.length >= 5) {
+  // Straight
+  if (isStraight) {
     return {
       handName: "Straight",
       score: 250,
     };
   }
 
-  // THREE OF A KIND
-  if (repetitions.includes(3)) {
+  // Tercia
+  if (
+    repetitions.includes(3)
+  ) {
     return {
-      handName: "Three of a Kind",
+      handName:
+        "Three of a Kind",
       score: 150,
     };
   }
 
-  // TWO PAIR
-  const pairs = repetitions.filter(
-    (value) => value === 2
-  ).length;
-
+  // Dos pares
   if (pairs === 2) {
     return {
-      handName: "Two Pair",
+      handName:
+        "Two Pair",
       score: 100,
     };
   }
 
-  // ONE PAIR
+  // Un par
   if (pairs === 1) {
     return {
       handName: "Pair",
@@ -133,8 +195,11 @@ export function evaluateHand(selectedCards) {
     };
   }
 
+  // Carta alta
   return {
-    handName: "High Card",
-    score: 10,
+    handName:
+      "High Card",
+    score:
+      Math.max(...values),
   };
 }
